@@ -42,18 +42,16 @@ func NewGame() (*Game, error) {
 
 // Update delega la lógica a los sistemas
 func (g *Game) Update() error {
-	// 1. Actualiza al jugador
+	// Actualiza al jugador
 	shotFired := g.spartan.Update()
 
-	// 2. Actualiza el gestor de enemigos
+	// Actualiza el gestor de enemigos
 	//    (Esto spawnea nuevos y limpia los muertos)
 	g.enemyManager.Update()
 	
-	// 3. Lógica de Colisión (la conexión)
+	// Lógica de Colisión (la conexión)
 	if shotFired {
 		playerBox := g.spartan.BoundingBox()
-
-		// ¡Iteramos sobre los enemigos VIVOS!
 		for _, enemy := range g.enemyManager.LiveEnemies() {
 			targetBox := enemy.BoundingBox()
 
@@ -76,16 +74,16 @@ func (g *Game) Update() error {
 
 // Draw delega el dibujado
 func (g *Game) Draw(screen *ebiten.Image) {
-	// 1. Dibuja el fondo
+	// Dibuja el fondo
 	screen.DrawImage(assets.BackgroundSprite, nil)
 
-	// 2. Dibuja al jugador
+	// Dibuja al jugador
 	g.spartan.Draw(screen)
 
-	// 3. Dibuja todos los enemigos (vivos y muriendo)
+	// Dibuja todos los enemigos (vivos y muriendo)
 	g.enemyManager.Draw(screen)
 
-	// 4. Dibuja el score
+	// Dibuja el score
 	g.scoreManager.Draw(screen)
 }
 

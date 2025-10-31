@@ -101,20 +101,20 @@ func loadImage(path string) (*ebiten.Image, error) {
 }
 
 func loadAudio(path string) (*audio.Player, error) {
-	// 1. Abre el archivo desde el embed
+	// Abre el archivo desde el embed
 	file, err := embeddedImages.Open(path)
 	if err != nil {
 		log.Printf("Ruta de audio fallida: %s", path)
 		return nil, err
 	}
 
-	// 2. Decodifica el .wav
+	// Decodifica el .wav
 	stream, err := wav.DecodeWithSampleRate(audioContext.SampleRate(), file.(fs.File))
 	if err != nil {
 		return nil, err
 	}
 	
-	// 3. Crea un reproductor
+	// Crea un reproductor
 	//    Usamos audio.NewPlayer para poder rebobinar y reproducir
 	player, err := audioContext.NewPlayer(stream)
 	if err != nil {
@@ -125,19 +125,19 @@ func loadAudio(path string) (*audio.Player, error) {
 }
 
 func loadFont(path string) (font.Face, error) {
-	// 1. Lee los bytes del archivo
+	// Lee los bytes del archivo
 	fileBytes, err := embeddedImages.ReadFile(path)
 	if err != nil {
 		return nil, err
 	}
 
-	// 2. Parsea el archivo .ttf
+	// Parsea el archivo .ttf
 	tt, err := opentype.Parse(fileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	// 3. Crea la "cara" de la fuente (Face)
+	// Crea la "cara" de la fuente (Face)
 	//    Usamos 48 'DPI' y un tamaño de 24 (puedes ajustar esto)
 	const dpi = 72
 	fontFace, err := opentype.NewFace(tt, &opentype.FaceOptions{

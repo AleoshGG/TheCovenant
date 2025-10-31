@@ -43,10 +43,10 @@ func (m *EnemyManager) LiveEnemies() []*entities.Grunt {
 
 // Update se encarga de producir nuevos enemigos y limpiar los muertos
 func (m *EnemyManager) Update() {
-	// --- 1. Parte PRODUCTOR (de enemigos) ---
+	// Parte PRODUCTOR (de enemigos) ---
 	m.spawnEnemies()
 
-	// --- 2. Parte CONSUMIDOR (de enemigos muertos) ---
+	// Parte CONSUMIDOR (de enemigos muertos) ---
 	m.updateAndCleanEnemies()
 }
 
@@ -80,10 +80,10 @@ func (m *EnemyManager) updateAndCleanEnemies() {
 		enemy.Update() // Actualiza el enemigo (movimiento, timers)
 		
 		if enemy.IsDefeated() {
-			// 1. Está muerto Y la animación terminó
-			// 2. Producimos un "1" en el canal de muertes
+			// Está muerto Y la animación terminó
+			// Producimos un "1" en el canal de muertes
 			m.defeatedChannel <- 1
-			// 3. NO lo añadimos a la 'newList' (efectivamente borrándolo)
+			// NO lo añadimos a la 'newList' (efectivamente borrándolo)
 		} else {
 			// Está vivo O está en animación de muerte.
 			// Lo mantenemos en la lista.

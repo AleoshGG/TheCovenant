@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"image/color"
 	"strconv"
-	"sync/atomic" // ¡Importante para concurrencia!
+	"sync/atomic" 
 
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/text"
