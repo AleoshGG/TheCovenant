@@ -9,7 +9,7 @@ import (
 )
 
 const (
-	maxEnemies = 5
+	maxEnemies = 10
 )
 
 type Game struct {

@@ -47,10 +47,14 @@ func (g *Grunt) Update() {
 }
 
 func (g *Grunt) Hit() {
+	
+
 	// Solo activa la animación si no está ya derrotado
 	if !g.isHit { 
 		g.isHit = true
 		g.defeathTimer = defeathFrameDuration
+		assets.GruntSound.Rewind()
+		assets.GruntSound.Play()
 	}
 }
 

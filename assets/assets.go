@@ -30,6 +30,7 @@ var (
 
 	audioContext 		 *audio.Context
 	ShootSniperSound 	 *audio.Player
+	GruntSound 	 		 *audio.Player
 
 	ScoreFont font.Face
 )
@@ -70,6 +71,11 @@ func LoadAssets() {
 	}
 
 	ShootSniperSound, err = loadAudio("resources/audio/sniper.wav")
+	if err != nil {
+		log.Fatalf("Error al cargar el sonido de disparo: %v", err)
+	}
+
+	GruntSound, err = loadAudio("resources/audio/grunt.wav")
 	if err != nil {
 		log.Fatalf("Error al cargar el sonido de disparo: %v", err)
 	}

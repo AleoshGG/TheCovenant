@@ -48,23 +48,25 @@ func (ls *LocationSpawner) Spawner(ticker time.Ticker, source rand.Source, rng r
 				// Algoritmo: Spawnear en el borde derecho,
 				// en una altura (Y) aleatoria.
 				
-				x := config.ScreenWidth - 500 // 50 píxeles fuera de la pantalla
-				
 				// Rango de Y (ej. entre 10% y 90% de la altura)
 				minY := int(float64(config.ScreenHeight) * 0.1)
 				maxY := int(float64(config.ScreenHeight) * 0.9)
 				y := rng.Intn(maxY-minY) + minY
+
+				minX := 1000
+				maxX := 1200 // (Casi al borde de 1536)
+				x := rng.Intn(maxX-minX) + minX
 				
 				newPosition := image.Point{X: x, Y: y}
 				
 				// Intenta enviar la posición al canal,
 				// pero no te bloquees si está lleno.
 				select {
-				case ls.producerChannel <- newPosition:
-					// Posición enviada
-				default:
-					// El canal está lleno, no pasa nada,
-					// descartamos esta posición e intentamos en el próximo tick.
+					case ls.producerChannel <- newPosition:
+						// Posición enviada
+					default:
+						// El canal está lleno, no pasa nada,
+						// descartamos esta posición e intentamos en el próximo tick.
 				}
 			}
 	}
@@ -76,7 +78,7 @@ func (ls *LocationSpawner) Start() {
 	source := rand.NewSource(time.Now().UnixNano())
 	rng := rand.New(source)
 
-	ticker := time.NewTicker(2 * time.Second)
+	ticker := time.NewTicker(1500 * time.Millisecond)
 	go ls.Spawner(*ticker, source, *rng)
 }
 
