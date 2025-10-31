@@ -18,12 +18,15 @@ import (
 var embeddedImages embed.FS
 
 var (
-	BackgroundSprite *ebiten.Image
-	SpartanSprite *ebiten.Image
-	SpartanShootSprite *ebiten.Image
+	BackgroundSprite 	 *ebiten.Image
 
-	audioContext *audio.Context
-	ShootSniperSound *audio.Player
+	SpartanSprite 		 *ebiten.Image
+	SpartanShootSprite 	 *ebiten.Image
+	GruntSprite 		 *ebiten.Image
+	GruntDejectedSprite  *ebiten.Image
+
+	audioContext 		 *audio.Context
+	ShootSniperSound 	 *audio.Player
 
 )
 
@@ -47,6 +50,17 @@ func LoadAssets() {
 	}
 
 	SpartanShootSprite, err = loadImage("resources/images/chief02.png")
+	if err != nil {
+		log.Fatalf("Error al cargar la imagen del jugador: %v", err)
+	}
+
+	// Carga el grunt
+	GruntSprite, err = loadImage("resources/images/grunt01.png")
+	if err != nil {
+		log.Fatalf("Error al cargar la imagen del jugador: %v", err)
+	}
+
+	GruntDejectedSprite, err = loadImage("resources/images/grunt02.png")
 	if err != nil {
 		log.Fatalf("Error al cargar la imagen del jugador: %v", err)
 	}
