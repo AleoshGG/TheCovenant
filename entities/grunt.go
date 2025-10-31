@@ -2,7 +2,6 @@ package entities
 
 import (
 	"TheCovenant/assets"
-	"TheCovenant/config"
 	"image"
 
 	"github.com/hajimehoshi/ebiten/v2"
@@ -11,30 +10,34 @@ import (
 const defeathFrameDuration = 10
 
 type Grunt struct {
-	idleImg *ebiten.Image
-	defeathImg *ebiten.Image
-	X 	float64
-	Y float64
-	Speed float64
-	Opts *ebiten.DrawImageOptions
+	idleImg 	*ebiten.Image
+	defeathImg  *ebiten.Image
+	X 			float64
+	Y 			float64
+	Speed 		float64
+	Opts 		*ebiten.DrawImageOptions
 
 	defeathTimer int
+	isHit 		 bool
 }
 
 func NewGrunt() *Grunt {
 	idle := assets.GruntSprite
 	defeath := assets.GruntDejectedSprite
 
-	width, height := idle.Size()
-
 	return &Grunt{
 		idleImg: idle,
 		defeathImg: defeath,
-		X: float64(config.ScreenWidth - width) / 2,
-		Y: float64(config.ScreenHeight - height) / 2,
 		Speed: 4,
 		Opts: &ebiten.DrawImageOptions{},
+		isHit: false,
 	}
+}
+
+// SetPosition permite al spawner colocar al Grunt
+func (g *Grunt) SetPosition(position image.Point) {
+	g.X = float64(position.X)
+	g.Y = float64(position.Y)
 }
 
 func (g *Grunt) Update() {
@@ -45,10 +48,21 @@ func (g *Grunt) Update() {
 
 func (g *Grunt) Hit() {
 	// Solo activa la animación si no está ya derrotado
-	if g.defeathTimer == 0 {
+	if !g.isHit { 
+		g.isHit = true
 		g.defeathTimer = defeathFrameDuration
-		// (En el futuro, aquí podrías reproducir un sonido de "grunt herido")
 	}
+}
+
+// IsAlive nos dice si el Grunt puede ser golpeado
+func (g *Grunt) IsAlive() bool {
+	return !g.isHit
+}
+
+// IsDefeated nos dice si la animación de muerte terminó y debe ser borrado
+func (g *Grunt) IsDefeated() bool {
+	// Está golpeado Y su temporizador de animación llegó a 0
+	return g.isHit && g.defeathTimer == 0
 }
 
 func (g *Grunt) Draw(screen *ebiten.Image) {

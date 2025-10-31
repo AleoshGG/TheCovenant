@@ -12,6 +12,9 @@ import (
 	"github.com/hajimehoshi/ebiten/v2/audio"
 	"github.com/hajimehoshi/ebiten/v2/audio/wav"
 	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
+
+	"golang.org/x/image/font"
+	"golang.org/x/image/font/opentype"
 )
 
 //go:embed all:resources
@@ -28,6 +31,7 @@ var (
 	audioContext 		 *audio.Context
 	ShootSniperSound 	 *audio.Player
 
+	ScoreFont font.Face
 )
 
 
@@ -69,6 +73,11 @@ func LoadAssets() {
 	if err != nil {
 		log.Fatalf("Error al cargar el sonido de disparo: %v", err)
 	}
+
+	ScoreFont, err = loadFont("resources/fonts/PressStart2P-Regular.ttf")
+	if err != nil {
+		log.Fatalf("Error al cargar la fuente: %v", err)
+	}
 }
 
 func loadImage(path string) (*ebiten.Image, error) {
@@ -107,4 +116,32 @@ func loadAudio(path string) (*audio.Player, error) {
 	}
 	
 	return player, nil
+}
+
+func loadFont(path string) (font.Face, error) {
+	// 1. Lee los bytes del archivo
+	fileBytes, err := embeddedImages.ReadFile(path)
+	if err != nil {
+		return nil, err
+	}
+
+	// 2. Parsea el archivo .ttf
+	tt, err := opentype.Parse(fileBytes)
+	if err != nil {
+		return nil, err
+	}
+
+	// 3. Crea la "cara" de la fuente (Face)
+	//    Usamos 48 'DPI' y un tamaño de 24 (puedes ajustar esto)
+	const dpi = 72
+	fontFace, err := opentype.NewFace(tt, &opentype.FaceOptions{
+		Size:    24,
+		DPI:     dpi,
+		Hinting: font.HintingFull,
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	return fontFace, nil
 }
