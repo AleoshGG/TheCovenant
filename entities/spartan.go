@@ -3,6 +3,7 @@ package entities
 import (
 	"TheCovenant/assets"
 	"TheCovenant/config"
+	"image"
 
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/inpututil"
@@ -40,7 +41,9 @@ func NewSpartan() *Spartan {
 	}
 }
 
-func (p *Spartan) Update() {
+func (p *Spartan) Update() bool {
+	shotFired := false
+
 	if ebiten.IsKeyPressed(ebiten.KeyW) {
 		p.Y -= p.Speed
 	}
@@ -60,8 +63,10 @@ func (p *Spartan) Update() {
 
 		// Acción 2: Cambiar el frame (iniciando el temporizador)
 		p.shootTimer = shootFrameDuration
+		shotFired = true
 	}
 
+	return shotFired
 }
 
 func (p *Spartan) Draw(screen *ebiten.Image) {
@@ -76,4 +81,17 @@ func (p *Spartan) Draw(screen *ebiten.Image) {
 		// Si no, dibuja el frame normal (idle)
 		screen.DrawImage(p.idleImg, p.Opts)
 	}
+}
+
+// BoundingBox retorna el "hitbox" actual del Spartan
+func (p *Spartan) BoundingBox() image.Rectangle {
+	// Usa la imagen 'idle' como referencia de tamaño
+	width, height := p.idleImg.Size()
+	
+	return image.Rect(
+		int(p.X),                 // x0
+		int(p.Y),                 // y0
+		int(p.X) + width,         // x1
+		int(p.Y) + height,        // y1
+	)
 }
